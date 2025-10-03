@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -17,6 +18,7 @@ import {
   CreateCompany,
   GetCompanyById,
   CompanyNotFoundError,
+  CompanyValidationError,
 } from '@my-poc-monorepo/domain/companies';
 
 class CreateCompanyDto {
@@ -46,10 +48,18 @@ export class CompanyController {
   @Post()
   @ApiOperation({ summary: 'Create a new company' })
   @ApiResponse({ status: 201, description: 'Company created successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid input data' })
   async createCompany(@Body() body: CreateCompanyDto) {
-    const { name, address } = body;
-    const output = await this.createCompanyService.execute({ name, address });
-    return output;
+    try {
+      const { name, address } = body;
+      const output = await this.createCompanyService.execute({ name, address });
+      return output;
+    } catch (error) {
+      if (error instanceof CompanyValidationError) {
+        throw new BadRequestException(error.message);
+      }
+      throw error;
+    }
   }
 
   @Get(':id')

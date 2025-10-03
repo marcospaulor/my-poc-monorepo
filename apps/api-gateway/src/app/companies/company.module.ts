@@ -15,14 +15,14 @@ import { RepositoriesFactory } from '@my-poc-monorepo/infra-database';
       useFactory: () => RepositoriesFactory.getCompanyRepository(),
     },
     {
-      provide: 'CreateCompanyUseCase',
+      provide: 'CreateCompany',
       useFactory: (companyRepository: CompanyRepository) => {
         return new CreateCompanyInteractor(companyRepository);
       },
       inject: ['CompanyRepository'],
     },
     {
-      provide: 'GetCompanyByIdUseCase',
+      provide: 'GetCompanyById',
       useFactory: (companyRepository: CompanyRepository) => {
         return new GetCompanyByIdInteractor(companyRepository);
       },

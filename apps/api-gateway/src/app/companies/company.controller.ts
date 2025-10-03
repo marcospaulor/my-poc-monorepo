@@ -14,8 +14,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-  CreateCompanyUseCase,
-  GetCompanyByIdUseCase,
+  CreateCompany,
+  GetCompanyById,
   CompanyNotFoundError,
 } from '@my-poc-monorepo/domain/companies';
 
@@ -37,10 +37,10 @@ class CreateCompanyDto {
 @Controller('companies')
 export class CompanyController {
   constructor(
-    @Inject('CreateCompanyUseCase')
-    private readonly createCompanyUseCase: CreateCompanyUseCase,
-    @Inject('GetCompanyByIdUseCase')
-    private readonly getCompanyByIdUseCase: GetCompanyByIdUseCase
+    @Inject('CreateCompany')
+    private readonly createCompanyService: CreateCompany,
+    @Inject('GetCompanyById')
+    private readonly getCompanyByIdService: GetCompanyById
   ) {}
 
   @Post()
@@ -48,7 +48,7 @@ export class CompanyController {
   @ApiResponse({ status: 201, description: 'Company created successfully' })
   async createCompany(@Body() body: CreateCompanyDto) {
     const { name, address } = body;
-    const output = await this.createCompanyUseCase.execute({ name, address });
+    const output = await this.createCompanyService.execute({ name, address });
     return output;
   }
 
@@ -58,7 +58,7 @@ export class CompanyController {
   @ApiResponse({ status: 404, description: 'Company not found' })
   async getCompanyById(@Param('id') id: string) {
     try {
-      const output = await this.getCompanyByIdUseCase.execute(id);
+      const output = await this.getCompanyByIdService.execute(id);
       return output;
     } catch (error) {
       if (error instanceof CompanyNotFoundError) {

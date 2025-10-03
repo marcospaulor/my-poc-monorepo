@@ -4,6 +4,6 @@ export type GetCompanyByIdOutput = {
   address: string;
 };
 
-export interface GetCompanyByIdUseCase {
+export interface GetCompanyById {
   execute(id: string): Promise<GetCompanyByIdOutput>;
 }

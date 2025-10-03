@@ -1,15 +1,15 @@
 import { Company, CompanyRepository } from '@my-poc-monorepo/domain/companies';
+import { getDatabase } from '../in-memory-database';
 
 export class InMemoryCompanyRepository implements CompanyRepository {
-  private companies: Company[] = [];
+  private db = getDatabase();
 
   async save(company: Company): Promise<void> {
-    this.companies.push(company);
+    this.db.saveCompany(company);
   }
 
   async findById(id: string): Promise<Company | null> {
-    const company = this.companies.find((c) => c.id === id);
-    return company || null;
+    return this.db.findCompanyById(id);
   }
 
   async findByIdOrThrow(id: string): Promise<Company> {
@@ -18,5 +18,21 @@ export class InMemoryCompanyRepository implements CompanyRepository {
       throw new Error('Company not found');
     }
     return company;
+  }
+
+  async findAll(): Promise<Company[]> {
+    return this.db.findAllCompanies();
+  }
+
+  async delete(id: string): Promise<boolean> {
+    return this.db.deleteCompany(id);
+  }
+
+  async exists(id: string): Promise<boolean> {
+    return this.db.companyExists(id);
+  }
+
+  async count(): Promise<number> {
+    return this.db.countCompanies();
   }
 }

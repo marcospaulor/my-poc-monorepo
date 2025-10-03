@@ -7,6 +7,6 @@ export type CreateCompanyOutput = {
   id: string;
 };
 
-export interface CreateCompanyUseCase {
+export interface CreateCompany {
   execute(input: CreateCompanyInput): Promise<CreateCompanyOutput>;
 }

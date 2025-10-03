@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 import {
   ApiOperation,
   ApiProperty,
@@ -8,6 +16,7 @@ import {
 import {
   CreateCompanyUseCase,
   GetCompanyByIdUseCase,
+  CompanyNotFoundError,
 } from '@my-poc-monorepo/domain/companies';
 
 class CreateCompanyDto {
@@ -48,7 +57,14 @@ export class CompanyController {
   @ApiResponse({ status: 200, description: 'Company found' })
   @ApiResponse({ status: 404, description: 'Company not found' })
   async getCompanyById(@Param('id') id: string) {
-    const output = await this.getCompanyByIdUseCase.execute(id);
-    return output;
+    try {
+      const output = await this.getCompanyByIdUseCase.execute(id);
+      return output;
+    } catch (error) {
+      if (error instanceof CompanyNotFoundError) {
+        throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
   }
 }

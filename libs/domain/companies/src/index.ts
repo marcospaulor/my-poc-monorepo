@@ -1,5 +1,6 @@
 // Entities
 export * from './lib/entities/company.entity';
+export * from './lib/entities/company.errors';
 
 // Contracts
 export * from './lib/contracts/company.repository';

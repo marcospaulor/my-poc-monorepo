@@ -5,12 +5,15 @@ import {
   CreateCompanyInteractor,
   GetCompanyByIdInteractor,
 } from '@my-poc-monorepo/domain/companies';
-import { CompaniesInfraModule } from '@my-poc-monorepo/infra/companies';
+import { RepositoriesFactory } from '@my-poc-monorepo/infra-database';
 
 @Module({
-  imports: [CompaniesInfraModule],
   controllers: [CompanyController],
   providers: [
+    {
+      provide: 'CompanyRepository',
+      useFactory: () => RepositoriesFactory.getCompanyRepository(),
+    },
     {
       provide: 'CreateCompanyUseCase',
       useFactory: (companyRepository: CompanyRepository) => {

@@ -18,7 +18,7 @@
       "@my-poc-monorepo/domain/companies": [
         "libs/domain/companies/src/index.ts"
       ],
-      "@my-poc-monorepo/infra/companies": ["libs/infra/companies/src/index.ts"]
+      "@my-poc-monorepo/infra-database": ["libs/infra/database/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

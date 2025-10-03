@@ -1,5 +1,5 @@
 {
-  "name": "@my-poc-monorepo/infra/companies",
+  "name": "@my-poc-monorepo/infra-database",
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
@@ -7,8 +7,6 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "tslib": "^2.3.0",
-    "@my-poc-monorepo/domain/companies": "*",
-    "@nestjs/common": "*",
-    "reflect-metadata": "*"
+    "@my-poc-monorepo/domain/companies": "*"
   }
 }

@@ -1,10 +1,10 @@
 export default {
-  displayName: 'infra-companies',
+  displayName: 'infra-database',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/infra/companies',
+  coverageDirectory: '../../../coverage/libs/infra/database',
 };

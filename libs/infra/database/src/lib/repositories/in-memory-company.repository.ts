@@ -7,8 +7,13 @@ export class InMemoryCompanyRepository implements CompanyRepository {
     this.companies.push(company);
   }
 
-  async findByIdOrThrow(id: string): Promise<Company> {
+  async findById(id: string): Promise<Company | null> {
     const company = this.companies.find((c) => c.id === id);
+    return company || null;
+  }
+
+  async findByIdOrThrow(id: string): Promise<Company> {
+    const company = await this.findById(id);
     if (!company) {
       throw new Error('Company not found');
     }

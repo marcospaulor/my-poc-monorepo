@@ -1,2 +1,9 @@
 autoInstallPeers: true
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@parcel/watcher'
+  - '@scarf/scarf'
+  - '@swc/core'
+  - nx
+  - unrs-resolver
 strictPeerDependencies: false

@@ -13,7 +13,6 @@ export class CreateCompanyInteractor implements CreateCompany {
   async execute(input: CreateCompanyInput): Promise<CreateCompanyOutput> {
     const { name, address } = input;
 
-    // Validations
     if (!name || name.trim() === '') {
       throw CompanyValidationError.invalidName();
     }
@@ -22,7 +21,7 @@ export class CreateCompanyInteractor implements CreateCompany {
       throw CompanyValidationError.invalidAddress();
     }
 
-    const company = Company.create(name, address);
+    const company = Company.create({ name, address });
     await this.companyRepository.save(company);
     return { id: company.id };
   }

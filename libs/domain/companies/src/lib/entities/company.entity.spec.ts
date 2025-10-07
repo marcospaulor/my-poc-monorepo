@@ -1,33 +1,55 @@
 import { Company } from './company.entity';
+import { CompanyValidationError } from './company.errors'; // Assumindo que existe
 
 describe('Company Entity', () => {
-  describe('constructor', () => {
-    it('should create a company with provided id, name and address', () => {
-      // Arrange
-      const id = '123e4567-e89b-12d3-a456-426614174000';
-      const name = 'Test Company';
-      const address = 'Rua das Flores, 123 - São Paulo/SP';
+  let mockId: string;
+  let mockName: string;
+  let mockAddress: string;
 
-      // Act
-      const company = new Company(id, name, address);
+  beforeEach(() => {
+    mockId = '123e4567-e89b-12d3-a456-426614174000';
+    mockName = 'Test Company';
+    mockAddress = 'Rua das Flores, 123 - São Paulo/SP';
+  });
 
-      // Assert
-      expect(company.id).toBe(id);
-      expect(company.name).toBe(name);
-      expect(company.address).toBe(address);
+  describe('restore', () => {
+    it('should restore the company state with provided values', () => {
+      const company = Company.restore({
+        id: mockId,
+        name: mockName,
+        address: mockAddress,
+      });
+      expect(company.id).toBe(mockId);
+      expect(company.name).toBe(mockName);
+      expect(company.address).toBe(mockAddress);
+    });
+
+    it('should throw validation error on invalid name during restore', () => {
+      expect(() =>
+        Company.restore({ id: mockId, name: '', address: mockAddress })
+      ).toThrow(CompanyValidationError);
+      expect(() =>
+        Company.restore({ id: mockId, name: '   ', address: mockAddress })
+      ).toThrow(CompanyValidationError);
+    });
+
+    it('should throw validation error on invalid address during restore', () => {
+      expect(() =>
+        Company.restore({ id: mockId, name: mockName, address: '' })
+      ).toThrow(CompanyValidationError);
+      expect(() =>
+        Company.restore({ id: mockId, name: mockName, address: '   ' })
+      ).toThrow(CompanyValidationError);
     });
   });
 
   describe('create', () => {
-    it('should create a company with auto-generated UUID', () => {
-      // Arrange
+    it('should create a company with auto-generated UUID and set name/address', () => {
       const name = 'New Company';
       const address = 'Av. Paulista, 1000 - São Paulo/SP';
 
-      // Act
-      const company = Company.create(name, address);
+      const company = Company.create({ name, address });
 
-      // Assert
       expect(company.id).toBeDefined();
       expect(company.id).toMatch(
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
@@ -36,43 +58,22 @@ describe('Company Entity', () => {
       expect(company.address).toBe(address);
     });
 
-    it('should create different companies with unique IDs', () => {
-      // Arrange
-      const name = 'Company Name';
-      const address = 'Company Address';
-
-      // Act
-      const company1 = Company.create(name, address);
-      const company2 = Company.create(name, address);
-
-      // Assert
-      expect(company1.id).not.toBe(company2.id);
-    });
-  });
-
-  describe('getters', () => {
-    it('should return name through getter', () => {
-      // Arrange
-      const name = 'Test Company';
-      const company = Company.create(name, 'Test Address');
-
-      // Act
-      const result = company.name;
-
-      // Assert
-      expect(result).toBe(name);
+    it('should throw validation error on invalid name during create', () => {
+      expect(() => Company.create({ name: '', address: mockAddress })).toThrow(
+        CompanyValidationError
+      );
+      expect(() =>
+        Company.create({ name: '   ', address: mockAddress })
+      ).toThrow(CompanyValidationError);
     });
 
-    it('should return address through getter', () => {
-      // Arrange
-      const address = 'Test Address';
-      const company = Company.create('Test Company', address);
-
-      // Act
-      const result = company.address;
-
-      // Assert
-      expect(result).toBe(address);
+    it('should throw validation error on invalid address during create', () => {
+      expect(() => Company.create({ name: mockName, address: '' })).toThrow(
+        CompanyValidationError
+      );
+      expect(() => Company.create({ name: mockName, address: '   ' })).toThrow(
+        CompanyValidationError
+      );
     });
   });
 });

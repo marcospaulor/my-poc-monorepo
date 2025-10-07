@@ -7,7 +7,10 @@
   "types": "./src/index.d.ts",
   "dependencies": {
     "tslib": "^2.3.0",
-    "@my-poc-monorepo/domain/companies": "*",
+    "@my-poc-monorepo/domain/companies": "workspace:*",
     "@prisma/client": "^6.16.3"
+  },
+  "devDependencies": {
+    "prisma": "6.16.3"
   }
 }

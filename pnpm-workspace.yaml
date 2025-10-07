@@ -7,3 +7,5 @@ onlyBuiltDependencies:
   - nx
   - unrs-resolver
 strictPeerDependencies: false
+packages:
+  - 'libs/**'

@@ -27,6 +27,10 @@ export class PrismaCompanyRepository implements CompanyRepository {
       return null;
     }
 
-    return new Company(companyData.id, companyData.name, companyData.address);
+    return Company.restore({
+      id: companyData.id,
+      name: companyData.name,
+      address: companyData.address,
+    });
   }
 }

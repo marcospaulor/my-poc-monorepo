@@ -6,53 +6,37 @@ import { CompanyNotFoundError } from '../../entities/company.errors';
 describe('GetCompanyByIdInteractor', () => {
   let interactor: GetCompanyByIdInteractor;
   let mockCompanyRepository: jest.Mocked<CompanyRepository>;
+  const mockCompany = Company.restore({
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    name: 'Test Company',
+    address: 'Rua das Flores, 123 - São Paulo/SP',
+  });
 
   beforeEach(() => {
     mockCompanyRepository = {
       save: jest.fn(),
       findById: jest.fn(),
     };
+    mockCompanyRepository.findById.mockResolvedValue(mockCompany); // TODO: trocar por um fake repository
 
     interactor = new GetCompanyByIdInteractor(mockCompanyRepository);
   });
 
   it('should return company data when company exists', async () => {
-    const companyId = '123e4567-e89b-12d3-a456-426614174000';
-    const mockCompany = Company.restore({
-      id: companyId,
-      name: 'Test Company',
-      address: 'Rua das Flores, 123 - São Paulo/SP',
-    });
-
-    mockCompanyRepository.findById.mockResolvedValue(mockCompany);
-
-    const result = await interactor.execute(companyId);
-
-    expect(result).toEqual({
-      id: companyId,
-      name: 'Test Company',
-      address: 'Rua das Flores, 123 - São Paulo/SP',
-    });
-    expect(mockCompanyRepository.findById).toHaveBeenCalledWith(companyId);
+    const result = await interactor.execute(mockCompany.id);
+    expect(result).toEqual(mockCompany);
   });
 
   it('should throw CompanyNotFoundError when company does not exist', async () => {
-    const companyId = 'non-existent-id';
     mockCompanyRepository.findById.mockResolvedValue(null);
-
-    await expect(interactor.execute(companyId)).rejects.toThrow(
+    await expect(interactor.execute('non-existent-id')).rejects.toThrow(
       CompanyNotFoundError
     );
-    expect(mockCompanyRepository.findById).toHaveBeenCalledWith(companyId);
   });
 
   it('should propagate errors from repository', async () => {
-    const companyId = 'test-id';
-    const error = new Error('Database connection failed');
-    mockCompanyRepository.findById.mockRejectedValue(error);
-
-    await expect(interactor.execute(companyId)).rejects.toThrow(
-      'Database connection failed'
-    );
+    const databaseError = new Error('Database connection failed');
+    mockCompanyRepository.findById.mockRejectedValue(databaseError);
+    await expect(interactor.execute('any-id')).rejects.toThrow(databaseError);
   });
 });

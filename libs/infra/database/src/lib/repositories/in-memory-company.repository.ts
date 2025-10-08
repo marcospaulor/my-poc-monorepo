@@ -6,7 +6,7 @@ export class InMemoryCompanyRepository implements CompanyRepository {
   async save(company: Company): Promise<void> {
     const existingIndex = this._companies.findIndex((c) => c.id === company.id);
     if (existingIndex >= 0) {
-      this._companies[existingIndex] = company;
+      throw new Error('Company with this ID already exists');
     }
     this._companies.push(company);
   }

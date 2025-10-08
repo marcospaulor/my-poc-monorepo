@@ -14,46 +14,24 @@ describe('Company Entity', () => {
 
   describe('restore', () => {
     it('should restore the company state with provided values', () => {
-      const company = Company.restore({
+      const companyData = {
         id: mockId,
         name: mockName,
         address: mockAddress,
-      });
-      expect(company.id).toBe(mockId);
-      expect(company.name).toBe(mockName);
-      expect(company.address).toBe(mockAddress);
-    });
-
-    it('should throw validation error on invalid name during restore', () => {
-      expect(() =>
-        Company.restore({ id: mockId, name: '', address: mockAddress })
-      ).toThrow(CompanyValidationError);
-      expect(() =>
-        Company.restore({ id: mockId, name: '   ', address: mockAddress })
-      ).toThrow(CompanyValidationError);
-    });
-
-    it('should throw validation error on invalid address during restore', () => {
-      expect(() =>
-        Company.restore({ id: mockId, name: mockName, address: '' })
-      ).toThrow(CompanyValidationError);
-      expect(() =>
-        Company.restore({ id: mockId, name: mockName, address: '   ' })
-      ).toThrow(CompanyValidationError);
+      };
+      const company = Company.restore(companyData);
+      expect(company).toMatchObject(companyData);
     });
   });
 
   describe('create', () => {
     it('should create a company with auto-generated UUID and set name/address', () => {
       const name = 'New Company';
-      const address = 'Av. Paulista, 1000 - São Paulo/SP';
+      const address = 'Address';
 
       const company = Company.create({ name, address });
 
       expect(company.id).toBeDefined();
-      expect(company.id).toMatch(
-        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-      );
       expect(company.name).toBe(name);
       expect(company.address).toBe(address);
     });

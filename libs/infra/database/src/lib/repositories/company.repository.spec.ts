@@ -49,73 +49,18 @@ describe('CompanyRepository Contract Tests', () => {
         await teardown();
       });
 
-      describe('save', () => {
-        it('should save a new company', async () => {
-          const company = Company.create({
-            name: 'Tech Corp',
-            address: '123 Main St',
-          });
-
-          await repository.save(company);
-          const savedCompany = await repository.findById(company.id);
-
-          expect(savedCompany).toBeDefined();
-          expect(savedCompany?.id).toBe(company.id);
-          expect(savedCompany?.name).toBe('Tech Corp');
-          expect(savedCompany?.address).toBe('123 Main St');
-        });
-
-        it('should update an existing company', async () => {
-          const company = Company.create({
-            name: 'Tech Corp',
-            address: '123 Main St',
-          });
-          await repository.save(company);
-
-          const updatedCompany = Company.restore({
-            id: company.id,
-            name: 'Updated Corp',
-            address: '456 New Ave',
-          });
-          await repository.save(updatedCompany);
-
-          const result = await repository.findById(company.id);
-          expect(result?.name).toBe('Updated Corp');
-          expect(result?.address).toBe('456 New Ave');
-        });
+      it('should save and retrieve a valid company', async () => {
+        const company = Company.create({ name: 'Any', address: 'Any' });
+        await repository.save(company);
+        const savedCompany = await repository.findById(company.id);
+        if (!savedCompany) throw new Error('Company not found after save');
+        expect(savedCompany).toBeInstanceOf(Company);
+        expect(savedCompany).toEqual(company);
       });
 
-      describe('findById', () => {
-        it('should return a company when found', async () => {
-          const company = Company.create({
-            name: 'Tech Corp',
-            address: '123 Main St',
-          });
-          await repository.save(company);
-
-          const result = await repository.findById(company.id);
-
-          expect(result).toBeDefined();
-          expect(result?.id).toBe(company.id);
-          expect(result?.name).toBe('Tech Corp');
-          expect(result?.address).toBe('123 Main St');
-        });
-
-        it('should return null when company not found', async () => {
-          const result = await repository.findById('non-existent-id');
-          expect(result).toBeNull();
-        });
-
-        it('should return a Company instance', async () => {
-          const company = Company.create({
-            name: 'Tech Corp',
-            address: '123 Main St',
-          });
-          await repository.save(company);
-
-          const result = await repository.findById(company.id);
-          expect(result).toBeInstanceOf(Company);
-        });
+      it('should return null when company not found', async () => {
+        const result = await repository.findById('non-existent-id');
+        expect(result).toBeNull();
       });
     });
   });

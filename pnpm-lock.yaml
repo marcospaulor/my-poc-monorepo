@@ -23,6 +23,9 @@ importers:
       axios:
         specifier: ^1.6.0
         version: 1.12.2
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14
@@ -144,10 +147,16 @@ importers:
       '@prisma/client':
         specifier: ^6.16.3
         version: 6.16.3(prisma@6.16.3(typescript@5.9.3))(typescript@5.9.3)
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
     devDependencies:
+      copy-webpack-plugin:
+        specifier: ^13.0.1
+        version: 13.0.1(webpack@5.102.0(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack-cli@5.1.4))
       prisma:
         specifier: 6.16.3
         version: 6.16.3(typescript@5.9.3)
@@ -2349,6 +2358,12 @@ packages:
     peerDependencies:
       webpack: ^5.1.0
 
+  copy-webpack-plugin@13.0.1:
+    resolution: {integrity: sha512-J+YV3WfhY6W/Xf9h+J1znYuqTye2xkBUIGyTPWuBAT27qajBa5mR4f8WBmfDY3YjRftT2kqZZiLi1qf0H+UOFw==}
+    engines: {node: '>= 18.12.0'}
+    peerDependencies:
+      webpack: ^5.1.0
+
   core-js-compat@3.45.1:
     resolution: {integrity: sha512-tqTt5T4PzsMIZ430XGviK4vzYSoeNJ6CXODi6c/voxOT6IZqBht5/EKaSNnYiEjjRYxjVz7DQIsOsY0XNi8PIA==}
 
@@ -2597,6 +2612,10 @@ packages:
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+    engines: {node: '>=12'}
+
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -8109,6 +8128,15 @@ snapshots:
       serialize-javascript: 6.0.2
       webpack: 5.102.0(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack-cli@5.1.4)
 
+  copy-webpack-plugin@13.0.1(webpack@5.102.0(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack-cli@5.1.4)):
+    dependencies:
+      glob-parent: 6.0.2
+      normalize-path: 3.0.0
+      schema-utils: 4.3.2
+      serialize-javascript: 6.0.2
+      tinyglobby: 0.2.15
+      webpack: 5.102.0(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack-cli@5.1.4)
+
   core-js-compat@3.45.1:
     dependencies:
       browserslist: 4.26.2
@@ -8328,11 +8356,13 @@ snapshots:
 
   dotenv-expand@11.0.7:
     dependencies:
-      dotenv: 16.4.7
+      dotenv: 16.6.1
 
   dotenv@16.4.7: {}
 
   dotenv@16.6.1: {}
+
+  dotenv@17.2.3: {}
 
   dunder-proto@1.0.1:
     dependencies:

@@ -14,7 +14,7 @@ export class GetCompanyByIdInteractor implements GetCompanyById {
       throw CompanyNotFoundError.withId(id);
     }
     return {
-      id: company.id,
+      id: company.id.value,
       name: company.name,
       address: company.address,
     };

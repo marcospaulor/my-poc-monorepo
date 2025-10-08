@@ -4,7 +4,9 @@ export class InMemoryCompanyRepository implements CompanyRepository {
   private readonly _companies: Company[] = [];
 
   async save(company: Company): Promise<void> {
-    const existingIndex = this._companies.findIndex((c) => c.id === company.id);
+    const existingIndex = this._companies.findIndex(
+      (c) => c.id.value === company.id.value
+    );
     if (existingIndex >= 0) {
       throw new Error('Company with this ID already exists');
     }
@@ -12,6 +14,14 @@ export class InMemoryCompanyRepository implements CompanyRepository {
   }
 
   async findById(id: string): Promise<Company | null> {
-    return this._companies.find((company) => company.id === id) ?? null;
+    return this._companies.find((company) => company.id.value === id) ?? null;
+  }
+
+  async findAll(): Promise<Company[]> {
+    return [...this._companies];
+  }
+
+  clear(): void {
+    this._companies.length = 0;
   }
 }

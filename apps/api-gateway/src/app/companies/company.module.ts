@@ -4,6 +4,7 @@ import {
   CompanyRepository,
   CreateCompanyInteractor,
   GetCompanyByIdInteractor,
+  ListCompaniesInteractor,
 } from '@my-poc-monorepo/domain/companies';
 import { RepositoriesFactory } from '@my-poc-monorepo/infra-database';
 
@@ -30,6 +31,13 @@ import { RepositoriesFactory } from '@my-poc-monorepo/infra-database';
       provide: 'GetCompanyById',
       useFactory: (companyRepository: CompanyRepository) => {
         return new GetCompanyByIdInteractor(companyRepository);
+      },
+      inject: ['CompanyRepository'],
+    },
+    {
+      provide: 'ListCompanies',
+      useFactory: (companyRepository: CompanyRepository) => {
+        return new ListCompaniesInteractor(companyRepository);
       },
       inject: ['CompanyRepository'],
     },

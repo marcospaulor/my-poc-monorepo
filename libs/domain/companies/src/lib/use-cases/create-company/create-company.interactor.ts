@@ -23,6 +23,6 @@ export class CreateCompanyInteractor implements CreateCompany {
 
     const company = Company.create({ name, address });
     await this.companyRepository.save(company);
-    return { id: company.id };
+    return { id: company.id.value };
   }
 }

@@ -4,6 +4,7 @@ import { CompanyController } from './company.controller';
 import {
   CreateCompany,
   GetCompanyById,
+  ListCompanies,
   CompanyNotFoundError,
   CompanyValidationError,
 } from '@my-poc-monorepo/domain/companies';
@@ -12,6 +13,7 @@ describe('CompanyController', () => {
   let controller: CompanyController;
   let mockCreateCompanyService: jest.Mocked<CreateCompany>;
   let mockGetCompanyByIdService: jest.Mocked<GetCompanyById>;
+  let mockListCompaniesService: jest.Mocked<ListCompanies>;
 
   beforeEach(async () => {
     mockCreateCompanyService = {
@@ -19,6 +21,10 @@ describe('CompanyController', () => {
     };
 
     mockGetCompanyByIdService = {
+      execute: jest.fn(),
+    };
+
+    mockListCompaniesService = {
       execute: jest.fn(),
     };
 
@@ -32,6 +38,10 @@ describe('CompanyController', () => {
         {
           provide: 'GetCompanyById',
           useValue: mockGetCompanyByIdService,
+        },
+        {
+          provide: 'ListCompanies',
+          useValue: mockListCompaniesService,
         },
       ],
     }).compile();

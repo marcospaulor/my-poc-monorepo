@@ -4,7 +4,7 @@ export class InMemoryDatabase {
   private static companies: Map<string, Company> = new Map();
 
   saveCompany(company: Company): void {
-    InMemoryDatabase.companies.set(company.id, company);
+    InMemoryDatabase.companies.set(company.id.value, company);
   }
 
   findCompanyById(id: string): Company | null {

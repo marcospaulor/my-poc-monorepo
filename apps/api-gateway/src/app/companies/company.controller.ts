@@ -17,6 +17,7 @@ import {
 import {
   CreateCompany,
   GetCompanyById,
+  ListCompanies,
   CompanyNotFoundError,
   CompanyValidationError,
 } from '@my-poc-monorepo/domain/companies';
@@ -42,7 +43,9 @@ export class CompanyController {
     @Inject('CreateCompany')
     private readonly createCompanyService: CreateCompany,
     @Inject('GetCompanyById')
-    private readonly getCompanyByIdService: GetCompanyById
+    private readonly getCompanyByIdService: GetCompanyById,
+    @Inject('ListCompanies')
+    private readonly listCompaniesService: ListCompanies
   ) {}
 
   @Post()
@@ -60,6 +63,14 @@ export class CompanyController {
       }
       throw error;
     }
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'List all companies' })
+  @ApiResponse({ status: 200, description: 'List of companies' })
+  async listCompanies() {
+    const output = await this.listCompaniesService.execute();
+    return output;
   }
 
   @Get(':id')

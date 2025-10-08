@@ -48,3 +48,10 @@ vitest.config.*.timestamp*
 
 /generated/prisma
 .env
+.env.test
+
+# Test databases
+libs/infra/database/prisma/test.db
+libs/infra/database/prisma/test.db-journal
+libs/infra/database/prisma/dev.db
+libs/infra/database/prisma/dev.db-journal

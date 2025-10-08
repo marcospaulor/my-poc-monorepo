@@ -9,9 +9,27 @@
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
         "jestConfig": "apps/api-gateway-e2e/jest.config.ts",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "runInBand": true
       },
-      "dependsOn": ["api-gateway:build", "api-gateway:serve"]
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      },
+      "dependsOn": ["api-gateway:build"]
+    },
+    "e2e-ci": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
+      "options": {
+        "jestConfig": "apps/api-gateway-e2e/jest.config.ts",
+        "runInBand": true,
+        "ci": true,
+        "codeCoverage": true
+      },
+      "dependsOn": ["api-gateway:build"]
     }
   }
 }

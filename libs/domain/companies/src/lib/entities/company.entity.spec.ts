@@ -20,7 +20,9 @@ describe('Company Entity', () => {
         address: mockAddress,
       };
       const company = Company.restore(companyData);
-      expect(company).toMatchObject(companyData);
+      expect(company.id.value).toBe(mockId);
+      expect(company.name).toBe(mockName);
+      expect(company.address).toBe(mockAddress);
     });
   });
 
@@ -28,9 +30,7 @@ describe('Company Entity', () => {
     it('should create a company with auto-generated UUID and set name/address', () => {
       const name = 'New Company';
       const address = 'Address';
-
       const company = Company.create({ name, address });
-
       expect(company.id).toBeDefined();
       expect(company.name).toBe(name);
       expect(company.address).toBe(address);

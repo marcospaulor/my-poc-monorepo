@@ -14,11 +14,25 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "ignoreDeprecations": "5.0",
     "paths": {
+      "@my-poc-monorepo/date": ["libs/domain/domain-core/date/src/index.ts"],
+      "@my-poc-monorepo/domain-errors": [
+        "libs/domain/domain-core/domain-errors/src/index.ts"
+      ],
       "@my-poc-monorepo/domain/companies": [
         "libs/domain/companies/src/index.ts"
       ],
-      "@my-poc-monorepo/infra-database": ["libs/infra/database/src/index.ts"]
+      "@my-poc-monorepo/id-generator": [
+        "libs/domain/domain-core/id-generator/src/index.ts"
+      ],
+      "@my-poc-monorepo/infra-database": ["libs/infra/database/src/index.ts"],
+      "@my-poc-monorepo/safe-string": [
+        "libs/domain/domain-core/safe-string/src/index.ts"
+      ],
+      "@my-poc-monorepo/uuid": [
+        "../domain/domain-core/id-generator/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

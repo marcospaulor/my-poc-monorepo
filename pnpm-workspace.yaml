@@ -1,14 +1,15 @@
 packages:
-  - libs/**
+  - "libs/**"
+  - "domain/domain-core/*"
 autoInstallPeers: true
 onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@parcel/watcher'
-  - '@prisma/client'
-  - '@prisma/engines'
-  - '@scarf/scarf'
-  - '@swc/core'
-  - nx
-  - prisma
-  - unrs-resolver
+  - "@nestjs/core"
+  - "@parcel/watcher"
+  - "@prisma/client"
+  - "@prisma/engines"
+  - "@scarf/scarf"
+  - "@swc/core"
+  - "nx"
+  - "prisma"
+  - "unrs-resolver"
 strictPeerDependencies: false

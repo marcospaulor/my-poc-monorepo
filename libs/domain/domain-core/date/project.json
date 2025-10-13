@@ -1,0 +1,19 @@
+{
+  "name": "date",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/domain-core/date/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/domain/domain-core/date",
+        "main": "libs/domain/domain-core/date/src/index.ts",
+        "tsConfig": "libs/domain/domain-core/date/tsconfig.lib.json",
+        "assets": ["libs/domain/domain-core/date/*.md"]
+      }
+    }
+  }
+}

@@ -1,6 +1,5 @@
 import { Company } from '../../entities/company.entity';
 import { CompanyRepository } from '../../contracts/company.repository';
-import { CompanyValidationError } from '../../entities/company.errors';
 import {
   CreateCompany,
   CreateCompanyInput,
@@ -12,17 +11,14 @@ export class CreateCompanyInteractor implements CreateCompany {
 
   async execute(input: CreateCompanyInput): Promise<CreateCompanyOutput> {
     const { name, address } = input;
-
-    if (!name || name.trim() === '') {
-      throw CompanyValidationError.invalidName();
-    }
-
-    if (!address || address.trim() === '') {
-      throw CompanyValidationError.invalidAddress();
-    }
-
-    const company = Company.create({ name, address });
+    const company = await Company.create({ name, address });
     await this.companyRepository.save(company);
-    return { id: company.id.value };
+
+    return {
+      id: company.id.value,
+      name: company.name,
+      address: company.address,
+      createdAt: company.createdAtIso,
+    };
   }
 }

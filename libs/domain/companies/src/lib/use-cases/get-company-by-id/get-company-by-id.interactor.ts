@@ -17,6 +17,7 @@ export class GetCompanyByIdInteractor implements GetCompanyById {
       id: company.id.value,
       name: company.name,
       address: company.address,
+      createdAt: company.createdAtIso,
     };
   }
 }

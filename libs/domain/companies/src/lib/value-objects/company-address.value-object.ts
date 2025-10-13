@@ -1,38 +1,42 @@
-import { CompanyValidationError } from '../entities/company.errors';
+import { SafeString } from '@my-poc-monorepo/safe-string';
+import {
+  EmptyStringError,
+  StringTooShortError,
+  StringTooLongError,
+} from '@my-poc-monorepo/domain-errors';
 
 export class CompanyAddress {
   private readonly _value: string;
   private static readonly MIN_LENGTH = 5;
   private static readonly MAX_LENGTH = 500;
+  private static readonly FIELD_NAME = 'address';
 
   constructor(value: string) {
-    this.validate(value);
-    this._value = value.trim();
+    const trimmedValue = value?.trim() || '';
+    this.validate(trimmedValue);
+    const safe = SafeString.create(trimmedValue);
+    this._value = safe.getValue();
   }
 
   private validate(value: string): void {
-    if (!value || value.trim() === '') {
-      throw CompanyValidationError.invalidAddress();
+    if (value.length === 0) {
+      throw new EmptyStringError({ field: CompanyAddress.FIELD_NAME });
     }
 
-    const trimmedValue = value.trim();
-    if (
-      trimmedValue.length < CompanyAddress.MIN_LENGTH ||
-      trimmedValue.length > CompanyAddress.MAX_LENGTH
-    ) {
-      throw CompanyValidationError.invalidAddress();
+    if (value.length < CompanyAddress.MIN_LENGTH) {
+      throw new StringTooShortError(CompanyAddress.MIN_LENGTH, value.length, {
+        field: CompanyAddress.FIELD_NAME,
+      });
+    }
+
+    if (value.length > CompanyAddress.MAX_LENGTH) {
+      throw new StringTooLongError(CompanyAddress.MAX_LENGTH, value.length, {
+        field: CompanyAddress.FIELD_NAME,
+      });
     }
   }
 
   get value(): string {
-    return this._value;
-  }
-
-  equals(other: CompanyAddress): boolean {
-    return this._value === other._value;
-  }
-
-  toString(): string {
     return this._value;
   }
 }

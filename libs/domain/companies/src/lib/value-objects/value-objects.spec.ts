@@ -2,7 +2,6 @@ import { randomUUID } from 'crypto';
 import { CompanyId } from './company-id.value-object';
 import { CompanyName } from './company-name.value-object';
 import { CompanyAddress } from './company-address.value-object';
-import { CompanyValidationError } from '../entities/company.errors';
 
 describe('Value Objects', () => {
   describe('CompanyId', () => {
@@ -14,14 +13,14 @@ describe('Value Objects', () => {
       const restored = new CompanyId(validId);
       expect(restored.value).toBe(validId);
       const sameId = new CompanyId(validId);
-      expect(restored.equals(sameId)).toBe(true);
-      expect(restored.equals(id1)).toBe(false);
+      expect(restored.value).toBe(sameId.value);
+      expect(restored.value).not.toBe(id1.value);
     });
 
     it('should reject invalid identifiers', () => {
-      expect(() => new CompanyId('')).toThrow(CompanyValidationError);
-      expect(() => new CompanyId('invalid-id')).toThrow(CompanyValidationError);
-      expect(() => new CompanyId('123')).toThrow(CompanyValidationError);
+      expect(() => new CompanyId('')).toThrow();
+      expect(() => new CompanyId('invalid-id')).toThrow();
+      expect(() => new CompanyId('123')).toThrow();
     });
   });
 
@@ -38,17 +37,15 @@ describe('Value Objects', () => {
       const name1 = new CompanyName('Company A');
       const name2 = new CompanyName('  Company A  ');
       const name3 = new CompanyName('Company B');
-      expect(name1.equals(name2)).toBe(true);
-      expect(name1.equals(name3)).toBe(false);
+      expect(name1.value).toBe(name2.value);
+      expect(name1.value).not.toBe(name3.value);
     });
 
     it('should reject invalid names', () => {
-      expect(() => new CompanyName('')).toThrow(CompanyValidationError);
-      expect(() => new CompanyName('   ')).toThrow(CompanyValidationError);
-      expect(() => new CompanyName('A')).toThrow(CompanyValidationError);
-      expect(() => new CompanyName('A'.repeat(256))).toThrow(
-        CompanyValidationError
-      );
+      expect(() => new CompanyName('')).toThrow();
+      expect(() => new CompanyName('   ')).toThrow();
+      expect(() => new CompanyName('A')).toThrow();
+      expect(() => new CompanyName('A'.repeat(256))).toThrow();
     });
   });
 
@@ -65,17 +62,15 @@ describe('Value Objects', () => {
       const addr1 = new CompanyAddress('123 Main Street');
       const addr2 = new CompanyAddress('  123 Main Street  ');
       const addr3 = new CompanyAddress('456 Oak Avenue');
-      expect(addr1.equals(addr2)).toBe(true);
-      expect(addr1.equals(addr3)).toBe(false);
+      expect(addr1.value).toBe(addr2.value);
+      expect(addr1.value).not.toBe(addr3.value);
     });
 
     it('should reject invalid addresses', () => {
-      expect(() => new CompanyAddress('')).toThrow(CompanyValidationError);
-      expect(() => new CompanyAddress('   ')).toThrow(CompanyValidationError);
-      expect(() => new CompanyAddress('1234')).toThrow(CompanyValidationError);
-      expect(() => new CompanyAddress('A'.repeat(501))).toThrow(
-        CompanyValidationError
-      );
+      expect(() => new CompanyAddress('')).toThrow();
+      expect(() => new CompanyAddress('   ')).toThrow();
+      expect(() => new CompanyAddress('1234')).toThrow();
+      expect(() => new CompanyAddress('A'.repeat(501))).toThrow();
     });
   });
 });

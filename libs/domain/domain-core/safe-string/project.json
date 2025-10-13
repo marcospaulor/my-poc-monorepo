@@ -1,0 +1,19 @@
+{
+  "name": "safe-string",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/domain-core/safe-string/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/domain/domain-core/safe-string",
+        "main": "libs/domain/domain-core/safe-string/src/index.ts",
+        "tsConfig": "libs/domain/domain-core/safe-string/tsconfig.lib.json",
+        "assets": ["libs/domain/domain-core/safe-string/*.md"]
+      }
+    }
+  }
+}

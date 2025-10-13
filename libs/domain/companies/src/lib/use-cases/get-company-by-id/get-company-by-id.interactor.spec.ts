@@ -16,10 +16,11 @@ describe('GetCompanyById', () => {
   });
 
   it('should save and retrieve company with all data', async () => {
-    const company = Company.restore({
+    const company = await Company.restore({
       id: '123e4567-e89b-12d3-a456-426614174000',
       name: 'Global Corp',
       address: 'Rua das Flores, 123 - São Paulo/SP',
+      createdAt: new Date('2024-01-15T10:30:00.000Z'),
     });
     await repository.save(company);
     const result = await interactor.execute(company.id.value);
@@ -27,6 +28,7 @@ describe('GetCompanyById', () => {
       id: company.id.value,
       name: company.name,
       address: company.address,
+      createdAt: '2024-01-15T10:30:00.000Z',
     });
   });
 

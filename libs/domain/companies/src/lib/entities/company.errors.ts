@@ -1,65 +1,38 @@
-abstract class DomainError extends Error {
-  protected _code: string;
-  protected _details: Record<string, unknown> = {};
+import { NotFoundError, ValidationError } from '@my-poc-monorepo/domain-errors';
 
-  constructor(message: string, code = 'DOMAIN_ERROR') {
-    super(message);
-    this.name = DomainError.name;
-    this._code = code;
-  }
-
-  get code() {
-    return this._code;
-  }
-
-  get details() {
-    return this._details;
-  }
-}
-
-class NotFoundError extends DomainError {
-  constructor(message: string) {
-    super(message);
-    this.name = NotFoundError.name;
-    this._code = 'NOT_FOUND';
-  }
-}
-
-class DomainValidationError extends DomainError {}
-
+/**
+ * Erro quando empresa não é encontrada
+ */
 export class CompanyNotFoundError extends NotFoundError {
-  constructor(message: string) {
-    super(message);
-    this.name = CompanyNotFoundError.name;
-  }
-  static withId(id: string) {
-    return new CompanyNotFoundError(`Company with ID ${id} not found`);
+  static withId(id: string): CompanyNotFoundError {
+    return new CompanyNotFoundError(`Empresa com ID ${id} não encontrada`, {
+      companyId: id,
+    });
   }
 }
 
-class InvalidCompanyName extends DomainValidationError {}
-
-export class CompanyValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = CompanyValidationError.name;
-  }
-
-  static invalidName() {
+/**
+ * Erro de validação de dados da empresa
+ */
+export class CompanyValidationError extends ValidationError {
+  static invalidName(): CompanyValidationError {
     return new CompanyValidationError(
-      'Company name is required and cannot be empty'
+      'Nome da empresa é obrigatório e não pode estar vazio',
+      { field: 'name' }
     );
   }
 
-  static invalidAddress() {
+  static invalidAddress(): CompanyValidationError {
     return new CompanyValidationError(
-      'Company address is required and cannot be empty'
+      'Endereço da empresa é obrigatório e não pode estar vazio',
+      { field: 'address' }
     );
   }
 
-  static invalidId() {
+  static invalidId(): CompanyValidationError {
     return new CompanyValidationError(
-      'Company ID is required and must be a valid UUID'
+      'ID da empresa é obrigatório e deve ser um UUID válido',
+      { field: 'id' }
     );
   }
 }

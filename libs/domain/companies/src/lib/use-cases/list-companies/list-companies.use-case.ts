@@ -3,6 +3,7 @@ export interface ListCompaniesOutput {
     id: string;
     name: string;
     address: string;
+    createdAt: string;
   }>;
 }
 

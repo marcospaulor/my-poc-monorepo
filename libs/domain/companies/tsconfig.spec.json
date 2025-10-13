@@ -7,6 +7,18 @@
     "types": ["jest", "node"],
     "baseUrl": ".",
     "paths": {
+      "@my-poc-monorepo/date": [
+        "../../../libs/domain/domain-core/date/src/index.ts"
+      ],
+      "@my-poc-monorepo/uuid": [
+        "../../../libs/domain/domain-core/uuid/src/index.ts"
+      ],
+      "@my-poc-monorepo/domain-errors": [
+        "../../../libs/domain/domain-errors/src/index.ts"
+      ],
+      "@my-poc-monorepo/safe-string": [
+        "../../../libs/domain/safe-string/src/index.ts"
+      ],
       "@my-poc-monorepo/domain/companies": [
         "../../../libs/domain/companies/src/index.ts"
       ],

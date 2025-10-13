@@ -16,23 +16,26 @@ describe('ListCompanies', () => {
   });
 
   it('should save multiple companies and retrieve all with complete data', async () => {
-    const companies = [
+    const companies = await Promise.all([
       Company.restore({
         id: '11111111-1111-1111-1111-111111111111',
         name: 'Alpha Industries',
         address: '100 First Avenue',
+        createdAt: new Date('2024-01-15T10:30:00.000Z'),
       }),
       Company.restore({
         id: '22222222-2222-2222-2222-222222222222',
         name: 'Beta Solutions',
         address: '200 Second Street',
+        createdAt: new Date('2024-01-16T11:30:00.000Z'),
       }),
       Company.restore({
         id: '33333333-3333-3333-3333-333333333333',
         name: 'Gamma Enterprises',
         address: '300 Third Boulevard',
+        createdAt: new Date('2024-01-17T12:30:00.000Z'),
       }),
-    ];
+    ]);
     for (const company of companies) {
       await repository.save(company);
     }
@@ -44,16 +47,19 @@ describe('ListCompanies', () => {
           id: '11111111-1111-1111-1111-111111111111',
           name: 'Alpha Industries',
           address: '100 First Avenue',
+          createdAt: '2024-01-15T10:30:00.000Z',
         },
         {
           id: '22222222-2222-2222-2222-222222222222',
           name: 'Beta Solutions',
           address: '200 Second Street',
+          createdAt: '2024-01-16T11:30:00.000Z',
         },
         {
           id: '33333333-3333-3333-3333-333333333333',
           name: 'Gamma Enterprises',
           address: '300 Third Boulevard',
+          createdAt: '2024-01-17T12:30:00.000Z',
         },
       ])
     );

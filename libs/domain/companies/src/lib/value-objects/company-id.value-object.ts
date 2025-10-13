@@ -12,8 +12,6 @@ export class CompanyId {
     if (!value || value.trim() === '') {
       throw CompanyValidationError.invalidId();
     }
-
-    // Validate UUID format
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!uuidRegex.test(value)) {
@@ -22,14 +20,6 @@ export class CompanyId {
   }
 
   get value(): string {
-    return this._value;
-  }
-
-  equals(other: CompanyId): boolean {
-    return this._value === other._value;
-  }
-
-  toString(): string {
     return this._value;
   }
 }

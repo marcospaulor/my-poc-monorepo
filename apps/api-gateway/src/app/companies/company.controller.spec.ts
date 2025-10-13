@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { CompanyController } from './company.controller';
 import {
   CreateCompany,
@@ -60,9 +59,20 @@ describe('CompanyController', () => {
         name: 'Test Company',
         address: 'Rua das Flores, 123 - São Paulo/SP',
       };
-      const expectedOutput = { id: '123e4567-e89b-12d3-a456-426614174000' };
+      const expectedOutput = {
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'Test Company',
+        address: 'Rua das Flores, 123 - São Paulo/SP',
+        createdAt: '2024-01-15T10:30:00.000Z',
+        createdAtFormatted: '15/01/2024 às 07:30',
+      };
 
-      mockCreateCompanyService.execute.mockResolvedValue(expectedOutput);
+      mockCreateCompanyService.execute.mockResolvedValue({
+        id: '123e4567-e89b-12d3-a456-426614174000',
+        name: 'Test Company',
+        address: 'Rua das Flores, 123 - São Paulo/SP',
+        createdAt: '2024-01-15T10:30:00.000Z',
+      });
 
       // Act
       const result = await controller.createCompany(createCompanyDto);
@@ -82,7 +92,12 @@ describe('CompanyController', () => {
         name: 'My Company LTDA',
         address: 'Av. Paulista, 1000 - São Paulo/SP',
       };
-      const expectedOutput = { id: 'generated-id' };
+      const expectedOutput = {
+        id: 'generated-id',
+        name: 'My Company LTDA',
+        address: 'Av. Paulista, 1000 - São Paulo/SP',
+        createdAt: '2024-01-15T10:30:00.000Z',
+      };
 
       mockCreateCompanyService.execute.mockResolvedValue(expectedOutput);
 
@@ -104,7 +119,12 @@ describe('CompanyController', () => {
       };
       const expectedId = 'new-company-id';
 
-      mockCreateCompanyService.execute.mockResolvedValue({ id: expectedId });
+      mockCreateCompanyService.execute.mockResolvedValue({
+        id: expectedId,
+        name: 'Another Company',
+        address: 'Test Address',
+        createdAt: '2024-01-15T10:30:00.000Z',
+      });
 
       // Act
       const result = await controller.createCompany(createCompanyDto);
@@ -130,7 +150,7 @@ describe('CompanyController', () => {
       );
     });
 
-    it('should throw BadRequestException when CompanyValidationError is thrown for invalid name', async () => {
+    it('should propagate CompanyValidationError when invalid name is provided', async () => {
       // Arrange
       const createCompanyDto = {
         name: '',
@@ -141,15 +161,16 @@ describe('CompanyController', () => {
       mockCreateCompanyService.execute.mockRejectedValue(error);
 
       // Act & Assert
+      // O controller agora deixa o erro ser propagado para o DomainExceptionFilter
       await expect(controller.createCompany(createCompanyDto)).rejects.toThrow(
-        BadRequestException
+        CompanyValidationError
       );
       await expect(controller.createCompany(createCompanyDto)).rejects.toThrow(
-        'Company name is required and cannot be empty'
+        'Nome da empresa é obrigatório e não pode estar vazio'
       );
     });
 
-    it('should throw BadRequestException when CompanyValidationError is thrown for invalid address', async () => {
+    it('should propagate CompanyValidationError when invalid address is provided', async () => {
       // Arrange
       const createCompanyDto = {
         name: 'Test Company',
@@ -160,11 +181,12 @@ describe('CompanyController', () => {
       mockCreateCompanyService.execute.mockRejectedValue(error);
 
       // Act & Assert
+      // O controller agora deixa o erro ser propagado para o DomainExceptionFilter
       await expect(controller.createCompany(createCompanyDto)).rejects.toThrow(
-        BadRequestException
+        CompanyValidationError
       );
       await expect(controller.createCompany(createCompanyDto)).rejects.toThrow(
-        'Company address is required and cannot be empty'
+        'Endereço da empresa é obrigatório e não pode estar vazio'
       );
     });
 
@@ -184,7 +206,7 @@ describe('CompanyController', () => {
       );
       await expect(
         controller.createCompany(createCompanyDto)
-      ).rejects.not.toThrow(BadRequestException);
+      ).rejects.not.toThrow(CompanyValidationError);
     });
   });
 
@@ -196,9 +218,16 @@ describe('CompanyController', () => {
         id: companyId,
         name: 'Test Company',
         address: 'Rua das Flores, 123 - São Paulo/SP',
+        createdAt: '2024-01-15T10:30:00.000Z',
+        createdAtFormatted: '15/01/2024 às 07:30',
       };
 
-      mockGetCompanyByIdService.execute.mockResolvedValue(expectedOutput);
+      mockGetCompanyByIdService.execute.mockResolvedValue({
+        id: companyId,
+        name: 'Test Company',
+        address: 'Rua das Flores, 123 - São Paulo/SP',
+        createdAt: '2024-01-15T10:30:00.000Z',
+      });
 
       // Act
       const result = await controller.getCompanyById(companyId);
@@ -209,7 +238,7 @@ describe('CompanyController', () => {
       expect(mockGetCompanyByIdService.execute).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw NotFoundException when CompanyNotFoundError is thrown', async () => {
+    it('should propagate CompanyNotFoundError when company does not exist', async () => {
       // Arrange
       const companyId = 'non-existent-id';
       const error = CompanyNotFoundError.withId(companyId);
@@ -217,11 +246,12 @@ describe('CompanyController', () => {
       mockGetCompanyByIdService.execute.mockRejectedValue(error);
 
       // Act & Assert
+      // O controller agora deixa o erro ser propagado para o DomainExceptionFilter
       await expect(controller.getCompanyById(companyId)).rejects.toThrow(
-        NotFoundException
+        CompanyNotFoundError
       );
       await expect(controller.getCompanyById(companyId)).rejects.toThrow(
-        `Company with ID ${companyId} not found`
+        `Empresa com ID ${companyId} não encontrada`
       );
     });
 
@@ -232,6 +262,7 @@ describe('CompanyController', () => {
         id: companyId,
         name: 'My Test Company LTDA',
         address: 'Av. Paulista, 1000 - São Paulo/SP',
+        createdAt: '2024-01-15T10:30:00.000Z',
       };
 
       mockGetCompanyByIdService.execute.mockResolvedValue(expectedOutput);
@@ -257,7 +288,7 @@ describe('CompanyController', () => {
         'Unexpected database error'
       );
       await expect(controller.getCompanyById(companyId)).rejects.not.toThrow(
-        NotFoundException
+        CompanyNotFoundError
       );
     });
 
@@ -268,6 +299,7 @@ describe('CompanyController', () => {
         id: companyId,
         name: 'Test',
         address: 'Test Address',
+        createdAt: '2024-01-15T10:30:00.000Z',
       };
 
       mockGetCompanyByIdService.execute.mockResolvedValue(expectedOutput);
@@ -283,8 +315,18 @@ describe('CompanyController', () => {
       // Arrange
       const companyId1 = 'id-1';
       const companyId2 = 'id-2';
-      const output1 = { id: companyId1, name: 'Company 1', address: 'Addr 1' };
-      const output2 = { id: companyId2, name: 'Company 2', address: 'Addr 2' };
+      const output1 = {
+        id: companyId1,
+        name: 'Company 1',
+        address: 'Addr 1',
+        createdAt: '2024-01-15T10:30:00.000Z',
+      };
+      const output2 = {
+        id: companyId2,
+        name: 'Company 2',
+        address: 'Addr 2',
+        createdAt: '2024-01-16T11:30:00.000Z',
+      };
 
       mockGetCompanyByIdService.execute
         .mockResolvedValueOnce(output1)

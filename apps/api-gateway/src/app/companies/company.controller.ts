@@ -1,40 +1,12 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  NotFoundException,
-  Param,
-  Post,
-  BadRequestException,
-} from '@nestjs/common';
-import {
-  ApiOperation,
-  ApiProperty,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   CreateCompany,
   GetCompanyById,
   ListCompanies,
-  CompanyNotFoundError,
-  CompanyValidationError,
 } from '@my-poc-monorepo/domain/companies';
-
-class CreateCompanyDto {
-  @ApiProperty({
-    description: 'Nome da empresa',
-    example: 'Minha Empresa LTDA',
-  })
-  name: string;
-
-  @ApiProperty({
-    description: 'Endereço da empresa',
-    example: 'Rua das Flores, 123 - São Paulo/SP',
-  })
-  address: string;
-}
+import { CreateCompanyDto, CompanyResponseDto } from './dto';
+import { CompanyHelper } from './company.helper';
 
 @ApiTags('companies')
 @Controller('companies')
@@ -50,42 +22,42 @@ export class CompanyController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new company' })
-  @ApiResponse({ status: 201, description: 'Company created successfully' })
+  @ApiResponse({
+    status: 201,
+    description: 'Company created successfully',
+    type: CompanyResponseDto,
+  })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
-  async createCompany(@Body() body: CreateCompanyDto) {
-    try {
-      const { name, address } = body;
-      const output = await this.createCompanyService.execute({ name, address });
-      return output;
-    } catch (error) {
-      if (error instanceof CompanyValidationError) {
-        throw new BadRequestException(error.message);
-      }
-      throw error;
-    }
+  async createCompany(
+    @Body() body: CreateCompanyDto
+  ): Promise<CompanyResponseDto> {
+    const { name, address } = body;
+    const output = await this.createCompanyService.execute({ name, address });
+    return CompanyHelper.toDto(output);
   }
 
   @Get()
   @ApiOperation({ summary: 'List all companies' })
-  @ApiResponse({ status: 200, description: 'List of companies' })
-  async listCompanies() {
+  @ApiResponse({
+    status: 200,
+    description: 'List of companies',
+    type: [CompanyResponseDto],
+  })
+  async listCompanies(): Promise<CompanyResponseDto[]> {
     const output = await this.listCompaniesService.execute();
-    return output;
+    return output.companies.map(CompanyHelper.toDto);
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get company by ID' })
-  @ApiResponse({ status: 200, description: 'Company found' })
+  @ApiResponse({
+    status: 200,
+    description: 'Company found',
+    type: CompanyResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Company not found' })
-  async getCompanyById(@Param('id') id: string) {
-    try {
-      const output = await this.getCompanyByIdService.execute(id);
-      return output;
-    } catch (error) {
-      if (error instanceof CompanyNotFoundError) {
-        throw new NotFoundException(error.message);
-      }
-      throw error;
-    }
+  async getCompanyById(@Param('id') id: string): Promise<CompanyResponseDto> {
+    const output = await this.getCompanyByIdService.execute(id);
+    return CompanyHelper.toDto(output);
   }
 }

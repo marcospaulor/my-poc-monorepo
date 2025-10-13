@@ -336,7 +336,7 @@ describe('API Gateway E2E', () => {
           (c: { id: string; name: string; address: string }) =>
             c.id === createdCompanyId
         );
-        
+
         expect(company).toMatchObject({
           id: createdCompanyId,
           name: 'Test Company E2E',
@@ -352,7 +352,7 @@ describe('API Gateway E2E', () => {
         const response = await request(API_URL)
           .get(`/api/companies/${createdCompanyId}`)
           .expect(200);
-        
+
         expect(response.body).toMatchObject({
           id: createdCompanyId,
           name: 'Test Company E2E',

@@ -1,0 +1,19 @@
+{
+  "name": "domain-errors",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/domain/domain-core/domain-errors/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/domain/domain-core/domain-errors",
+        "main": "libs/domain/domain-core/domain-errors/src/index.ts",
+        "tsConfig": "libs/domain/domain-core/domain-errors/tsconfig.lib.json",
+        "assets": ["libs/domain/domain-core/domain-errors/*.md"]
+      }
+    }
+  }
+}

@@ -46,7 +46,7 @@ describe.each([
   });
 
   it('should save and retrieve a valid company', async () => {
-    const company = Company.create({
+    const company = await Company.create({
       name: 'Test Company',
       address: '123 Main Street',
     });

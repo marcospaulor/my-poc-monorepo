@@ -11,6 +11,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
         id: company.id.value,
         name: company.name,
         address: company.address,
+        createdAt: company.createdAt,
       },
       update: {
         name: company.name,
@@ -27,21 +28,25 @@ export class PrismaCompanyRepository implements CompanyRepository {
       return null;
     }
 
-    return Company.restore({
+    return await Company.restore({
       id: companyData.id,
       name: companyData.name,
       address: companyData.address,
+      createdAt: companyData.createdAt,
     });
   }
 
   async findAll(): Promise<Company[]> {
     const companies = await this.prisma.company.findMany();
-    return companies.map((companyData) =>
-      Company.restore({
-        id: companyData.id,
-        name: companyData.name,
-        address: companyData.address,
-      })
+    return await Promise.all(
+      companies.map((companyData) =>
+        Company.restore({
+          id: companyData.id,
+          name: companyData.name,
+          address: companyData.address,
+          createdAt: companyData.createdAt,
+        })
+      )
     );
   }
 }

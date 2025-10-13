@@ -1,5 +1,9 @@
 import { ExceptionFilter, Catch, ArgumentsHost, Logger } from '@nestjs/common';
-import { BaseError, ErrorHandlerChain } from '@my-poc-monorepo/domain-errors';
+import {
+  BaseError,
+  ErrorHandlerChain,
+  ValidationErrors,
+} from '@my-poc-monorepo/domain-errors';
 
 @Catch(BaseError)
 export class DomainExceptionFilter implements ExceptionFilter {
@@ -11,17 +15,22 @@ export class DomainExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    // Usa o Chain of Responsibility para mapear o erro de domínio
     const errorResponse = this.errorHandlerChain.handle(exception);
 
-    // Enriquece a resposta com informações do request
     const httpResponse = {
-      ...errorResponse,
+      statusCode: errorResponse.statusCode,
+      message: errorResponse.message,
+      code: errorResponse.code,
+      timestamp: errorResponse.timestamp,
       path: request.url,
       method: request.method,
+      context: errorResponse.context,
     };
 
-    // Log estruturado para observabilidade
+    if (exception instanceof ValidationErrors) {
+      httpResponse['errors'] = exception.errors;
+    }
+
     this.logger.error(
       `[${errorResponse.code}] ${errorResponse.message}`,
       JSON.stringify({
@@ -33,7 +42,6 @@ export class DomainExceptionFilter implements ExceptionFilter {
       })
     );
 
-    // Envia a resposta HTTP
     response.status(errorResponse.statusCode).json(httpResponse);
   }
 }
